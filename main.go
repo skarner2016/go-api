@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"go-api/library/config"
 	"go-api/routes"
 )
@@ -9,8 +8,10 @@ import (
 func main() {
 	// 初始化配置
 	config.InitConfig()
-	fmt.Println("main")
-
 	// 初始化路由
-	routes.InitRoute()
+	router := routes.InitRoute()
+
+	if err := router.Run(); err != nil {
+		panic(err)
+	}
 }
