@@ -46,9 +46,12 @@ func TestUserController_VerificationCode(t *testing.T) {
 	url := routes.UserGroup + routes.VerificationCode
 
 	params := user.VerificationCodeParams{
-		VerificationType:  1,
-		VerificationValue: "133333333333",
+		VerificationType: 1,
+		AreaCode:         86,
+		Mobile:           13333333333,
+		Email:            "123456@qq.com",
 	}
+
 	paramsJson, err := json.Marshal(&params)
 	if err != nil {
 		t.Error(err)
@@ -67,7 +70,6 @@ func TestUserController_UserInfo(t *testing.T) {
 
 	w := UserControllerInit(url, method, nil)
 	assert.Equal(t, 200, w.Code)
-	// assert.Equal(t, "pong", w.Body.String())
 
 	fmt.Println(w.Body.String())
 }
@@ -77,9 +79,11 @@ func TestUserController_Register(t *testing.T) {
 	url := routes.UserGroup + routes.Register
 
 	params := user.RegisterParams{
-		AreaCode: 86,
-		Mobile:   13333333333,
-		User:     "ahaha",
+		RegisterType: user.VerificationTypeMobileRegister,
+		AreaCode:     86,
+		Mobile:       13333333333,
+		Email:        "",
+		Password:     "",
 	}
 	paramsJson, err := json.Marshal(&params)
 	if err != nil {

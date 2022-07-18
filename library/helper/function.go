@@ -2,8 +2,10 @@ package helper
 
 import (
 	"github.com/go-playground/validator/v10"
+	"math/rand"
 	"reflect"
 	"strconv"
+	"time"
 )
 
 func AddString(arg ...string) float64 {
@@ -29,4 +31,23 @@ func GetValidMessage(err error, obj interface{}) string {
 	}
 
 	return err.Error()
+}
+
+func RandString(l int) string {
+	str := "0123456789abcdefghijklmnopqrstuvwxyz"
+	strList := []byte(str)
+
+	result := []byte{}
+
+	i:=0
+
+	r:=rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	for i < l {
+		new := strList[r.Intn(len(strList))]
+		result = append(result, new)
+		i += 1
+	}
+
+	return string(result)
 }

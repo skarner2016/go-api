@@ -20,7 +20,7 @@ func (a *ApiController) Success(c *gin.Context, data interface{}) {
 }
 
 func (a *ApiController) Fail(c *gin.Context, code errorCode.ErrorCode)  {
-	msg := errorCode.NewError().GetMsg(code)
+	msg := errorCode.NewError().GetMessage(code)
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": http.StatusOK,

@@ -9,8 +9,8 @@ import (
 const (
 	UserGroup = "/api/user"
 
-	AreaCode         = "/area-code"
-	VerificationCode = "/verification-code"
+	AreaCode         = "/areaCode"
+	VerificationCode = "/verificationCode"
 	Register         = "/register"
 	UserInfo         = "/info"
 )

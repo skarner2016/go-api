@@ -6,6 +6,6 @@ import (
 )
 
 func TestErrorCode_GetMsg(t *testing.T) {
-	msg := NewError().GetMsg(UnknownError)
+	msg := NewError().GetMessage(UnknownError)
 	fmt.Println(msg)
 }

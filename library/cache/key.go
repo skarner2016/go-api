@@ -1,5 +1,7 @@
 package cache
 
+import "fmt"
+
 type Key struct {
 
 }
@@ -14,4 +16,12 @@ func (c *Key) GetSymbolPrice() string {
 
 func (c *Key) GetSymbolInfo() string {
 	return "symbol:binance"
+}
+
+func (c *Key) GetMobileVerificationCode(areaCode, mobile int64) string {
+	return fmt.Sprintf("user:verification_code:mobile:%d:%d", areaCode, mobile)
+}
+
+func (c *Key) GetEmailVerificationCode(email string) string {
+	return fmt.Sprintf("user:verification_code:email:%s", email)
 }
