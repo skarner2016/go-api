@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"go-api/app/http/controllers/api/user"
+	"go-api/app/http/services/userService"
 	"go-api/library/config"
 	"go-api/routes"
 	"io"
@@ -12,7 +12,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/go-playground/assert/v2"
+	//"github.com/go-playground/assert/v2"
+	"github.com/stretchr/testify/assert"
+
 )
 
 func UserControllerInit(url, method string, body io.Reader) *httptest.ResponseRecorder {
@@ -42,14 +44,16 @@ func TestUserController_AreaCode(t *testing.T) {
 }
 
 func TestUserController_VerificationCode(t *testing.T) {
+	config.InitConfig()
+
 	method := http.MethodGet
 	url := routes.UserGroup + routes.VerificationCode
 
-	params := user.VerificationCodeParams{
-		VerificationType: 1,
-		AreaCode:         86,
-		Mobile:           13333333333,
-		Email:            "123456@qq.com",
+	params := userService.VerificationCodeParams{
+		VerificationType: userService.VerificationTypeMobileLogin,
+		AreaCode:         config.VipConfig.GetInt64("test.areaCode"),
+		Mobile:           config.VipConfig.GetInt64("test.mobile"),
+		Email:            config.VipConfig.GetString("test.email"),
 	}
 
 	paramsJson, err := json.Marshal(&params)
@@ -69,30 +73,61 @@ func TestUserController_UserInfo(t *testing.T) {
 	url := routes.UserGroup + routes.UserInfo
 
 	w := UserControllerInit(url, method, nil)
-	assert.Equal(t, 200, w.Code)
 
-	fmt.Println(w.Body.String())
+	fmt.Println("response:", w.Body.String())
+	assert.Equal(t, 200, w.Code)
 }
 
 func TestUserController_Register(t *testing.T) {
-	method := http.MethodGet
-	url := routes.UserGroup + routes.Register
+	config.InitConfig()
 
-	params := user.RegisterParams{
-		RegisterType: user.VerificationTypeMobileRegister,
-		AreaCode:     86,
-		Mobile:       13333333333,
-		Email:        "",
-		Password:     "",
+	code := int64(355813)
+	params := &userService.RegisterParams{
+		VerificationType: userService.VerificationTypeMobileRegister,
+		AreaCode:         config.VipConfig.GetInt64("test.areaCode"),
+		Mobile:           config.VipConfig.GetInt64("test.mobile"),
+		Email:            config.VipConfig.GetString("test.email"),
+		Password:         config.VipConfig.GetString("test.password"),
+		Code:             code,
 	}
+
 	paramsJson, err := json.Marshal(&params)
-	if err != nil {
-		t.Error(err)
-	}
+	assert.Nil(t, err)
 
 	body := bytes.NewReader(paramsJson)
-	w := UserControllerInit(url, method, body)
-	assert.Equal(t, 200, w.Code)
 
-	fmt.Println(w.Body.String())
+	method := http.MethodGet
+	url := routes.UserGroup + routes.Register
+	w := UserControllerInit(url, method, body)
+	fmt.Println("response:", w.Body.String())
+
+	assert.Equal(t, 200, w.Code)
 }
+
+func TestUserController_Login(t *testing.T) {
+	config.InitConfig()
+
+	verificationType := userService.VerificationTypeMobileLogin
+	code := int64(452499)
+	params := &userService.LoginParams{
+		VerificationType: verificationType,
+		AreaCode:         config.VipConfig.GetInt64("test.areaCode"),
+		Mobile:           config.VipConfig.GetInt64("test.mobile"),
+		Email:            config.VipConfig.GetString("test.email"),
+		Code:             code,
+	}
+	paramsJson, err := json.Marshal(params)
+	assert.Nil(t, err)
+
+	body := bytes.NewReader(paramsJson)
+
+	method := http.MethodGet
+	url := routes.UserGroup + routes.Login
+
+	w := UserControllerInit(url, method, body)
+	fmt.Println(w.Body.String())
+
+	assert.Equal(t, 200, w.Code)
+}
+
+

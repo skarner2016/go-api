@@ -49,3 +49,4 @@ compress = true
 email = "123456@qq.com"
 areaCode = "86"
 mobile = "13333333333"
+password = "pass123456"

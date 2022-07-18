@@ -17,6 +17,28 @@ func NewUserRepository() *UserRepository {
 	}
 }
 
-func (u *UserRepository) CreateUser(user *userModel.UserModel) {
-	u.DB.Create(user)
+func (u *UserRepository) CreateUser(user *userModel.UserModel) error {
+	return u.DB.Create(user).Error
+}
+
+func (u *UserRepository) GetUserByMobile(areaCode, mobile int64) *userModel.UserModel {
+	user := &userModel.UserModel{}
+	res := u.DB.Where("area_code", areaCode).
+		Where("mobile", mobile).
+		Find(&user)
+	if res.RowsAffected == 0 {
+		return nil
+	}
+
+	return user
+}
+
+func (u *UserRepository) GetUserByEmail(email string) *userModel.UserModel {
+	user := &userModel.UserModel{}
+	res := u.DB.Where("email", email).Find(&user)
+	if res.RowsAffected == 0 {
+		return nil
+	}
+
+	return user
 }

@@ -13,6 +13,7 @@ const (
 	VerificationCode = "/verificationCode"
 	Register         = "/register"
 	UserInfo         = "/info"
+	Login = "/login"
 )
 
 func addApiRoute(apiRoute *gin.Engine) {
@@ -27,5 +28,6 @@ func addApiRoute(apiRoute *gin.Engine) {
 		userGroup.GET(VerificationCode, user.UserController{}.VerificationCode)
 		userGroup.GET(UserInfo, user.UserController{}.UserInfo)
 		userGroup.GET(Register, user.UserController{}.Register)
+		userGroup.GET(Login, user.UserController{}.Login)
 	}
 }
